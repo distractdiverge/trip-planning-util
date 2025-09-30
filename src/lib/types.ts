@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const PlanInputSchema = z.object({
-  eventTime: z.string().datetime(),
+  eventTime: z.string(),
   arriveEarly: z.number().min(0).default(10),
   pickupReady: z.number().min(0).default(10),
   driveBuffer: z.number().min(0).default(5),
