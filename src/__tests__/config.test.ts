@@ -47,7 +47,7 @@ describe('ConfigManager', () => {
             defaults: { arriveEarly: 15, pickupReady: 5, driveBuffer: 10, roundTo: 5 },
           },
         },
-        aliases: { Home: '123 Main St' },
+        aliases: { Home: '123 Main St', 'Stop 1': '456 Oak Ave' },
         defaults: { arriveEarly: 15, pickupReady: 5, driveBuffer: 10, roundTo: 5, timezone: 'UTC' },
       };
 

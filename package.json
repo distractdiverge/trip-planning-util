@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit"
   },
   "keywords": ["travel", "planning", "schedule", "cli"],
-  "author": "",
+  "author": "Astrid Lapinski <the.astrid.solveig@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "commander": "^11.1.0",

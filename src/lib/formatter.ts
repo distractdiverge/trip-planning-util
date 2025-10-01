@@ -15,31 +15,31 @@ export class OutputFormatter {
     };
 
     const leaveHomeTime = parseTime(schedule.leaveHome);
-    const arriveExTime = parseTime(schedule.arriveEx);
-    const leaveExTime = parseTime(schedule.leaveEx);
+    const arriveStopTime = parseTime(schedule.arriveStop);
+    const leaveStopTime = parseTime(schedule.leaveStop);
     const arriveEventTime = parseTime(schedule.arriveEvent);
 
     const events: EventAttributes[] = [
       {
         start: this.dateTimeToDateArray(leaveHomeTime),
-        end: this.dateTimeToDateArray(arriveExTime),
-        title: `Drive to Ex's House`,
-        description: `${schedule.homeToExDuration} min drive (+${schedule.driveBuffer} buffer)`,
-        location: 'Home → Ex\'s House',
+        end: this.dateTimeToDateArray(arriveStopTime),
+        title: `Drive to Stop`,
+        description: `${schedule.homeToStopDuration} min drive (+${schedule.driveBuffer} buffer)`,
+        location: 'Home → Stop',
       },
       {
-        start: this.dateTimeToDateArray(arriveExTime),
-        end: this.dateTimeToDateArray(leaveExTime),
-        title: `Pickup at Ex's House`,
+        start: this.dateTimeToDateArray(arriveStopTime),
+        end: this.dateTimeToDateArray(leaveStopTime),
+        title: `Pickup at Stop`,
         description: `${schedule.pickupReady} mins to get ready`,
-        location: 'Ex\'s House',
+        location: 'Stop',
       },
       {
-        start: this.dateTimeToDateArray(leaveExTime),
+        start: this.dateTimeToDateArray(leaveStopTime),
         end: this.dateTimeToDateArray(arriveEventTime),
         title: `Drive to Event`,
-        description: `${schedule.exToEventDuration} min drive (+${schedule.driveBuffer} buffer)`,
-        location: 'Ex\'s House → Event Venue',
+        description: `${schedule.stopToEventDuration} min drive (+${schedule.driveBuffer} buffer)`,
+        location: 'Stop → Event Venue',
       },
     ];
 
@@ -70,13 +70,13 @@ export class OutputFormatter {
       '📅 Travel Schedule Summary:',
       '',
       `• ${schedule.leaveHome} - Leave home`,
-      `• ${schedule.arriveEx} - Arrive at ex's house`,
-      `• ${schedule.leaveEx} - Leave ex's house`,
+      `• ${schedule.arriveStop} - Arrive at stop`,
+      `• ${schedule.leaveStop} - Leave stop`,
       `• ${schedule.arriveEvent} - Arrive at event`,
       '',
       '🚗 Drive Times:',
-      `• Home → Ex's: ${schedule.homeToExDuration} min (+${schedule.driveBuffer} buffer)`,
-      `• Ex's → Event: ${schedule.exToEventDuration} min (+${schedule.driveBuffer} buffer)`,
+      `• Home → Stop: ${schedule.homeToStopDuration} min (+${schedule.driveBuffer} buffer)`,
+      `• Stop → Event: ${schedule.stopToEventDuration} min (+${schedule.driveBuffer} buffer)`,
       '',
       '⏱️ Buffers:',
       `• Arrive early: ${schedule.arriveEarly} min`,

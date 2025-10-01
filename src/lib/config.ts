@@ -26,6 +26,25 @@ export class ConfigManager {
         },
       },
       aliases: {},
+      locations: {
+        homes: {
+          'home': '123 Main St, Default City',
+          'my house': '123 Main St, Default City',
+        },
+        schools: {
+          'school': 'Elementary School, 456 School St',
+          'the school': 'Elementary School, 456 School St',
+        },
+        venues: {
+          'soccer field': 'Community Soccer Complex, 789 Sports Dr',
+          'practice field': 'Community Soccer Complex, 789 Sports Dr',
+        },
+        stops: {
+          "ex's house": '456 Oak Ave, Pickup Location',
+          'pickup': '456 Oak Ave, Pickup Location',
+        },
+        other: {},
+      },
       defaults: {
         arriveEarly: 10,
         pickupReady: 10,
@@ -87,5 +106,43 @@ export class ConfigManager {
     const config = await this.getConfig();
     delete config.profiles[name];
     await this.saveConfig(config);
+  }
+
+  async addLocation(category: keyof Config['locations'], name: string, address: string): Promise<void> {
+    const config = await this.getConfig();
+    if (!config.locations[category]) {
+      config.locations[category] = {};
+    }
+    config.locations[category][name.toLowerCase()] = address;
+    await this.saveConfig(config);
+  }
+
+  async removeLocation(category: keyof Config['locations'], name: string): Promise<void> {
+    const config = await this.getConfig();
+    delete config.locations[category][name.toLowerCase()];
+    await this.saveConfig(config);
+  }
+
+  findLocation(locationName: string): { address: string; category: string } | null {
+    // This method will be called synchronously with a config object
+    throw new Error('Use findLocationInConfig instead');
+  }
+
+  findLocationInConfig(config: Config, locationName: string): { address: string; category: string } | null {
+    const searchName = locationName.toLowerCase().trim();
+    
+    // Search in all location categories
+    for (const [category, locations] of Object.entries(config.locations)) {
+      if (locations[searchName]) {
+        return { address: locations[searchName], category };
+      }
+    }
+
+    // Also search in old aliases for backward compatibility
+    if (config.aliases[locationName]) {
+      return { address: config.aliases[locationName], category: 'aliases' };
+    }
+
+    return null;
   }
 }

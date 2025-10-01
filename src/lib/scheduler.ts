@@ -13,17 +13,17 @@ export function calculateSchedule(input: PlanInput): ScheduleResult {
   // 1. T_must_arrive = T_event - E_arrive
   const mustArriveTime = eventDateTime.minus({ minutes: input.arriveEarly });
 
-  // 2. T_leave_ex = T_must_arrive - (D_ex_event + B_drive)
-  const leaveExTime = mustArriveTime.minus({ 
-    minutes: input.exToEventDuration + input.driveBuffer 
+  // 2. T_leave_stop = T_must_arrive - (D_stop_event + B_drive)
+  const leaveStopTime = mustArriveTime.minus({ 
+    minutes: input.stopToEventDuration + input.driveBuffer 
   });
 
-  // 3. T_arrive_ex = T_leave_ex - R_pickup
-  const arriveExTime = leaveExTime.minus({ minutes: input.pickupReady });
+  // 3. T_arrive_stop = T_leave_stop - R_pickup
+  const arriveStopTime = leaveStopTime.minus({ minutes: input.pickupReady });
 
-  // 4. T_leave_home_raw = T_arrive_ex - (D_home_ex + B_drive)
-  const leaveHomeRaw = arriveExTime.minus({ 
-    minutes: input.homeToExDuration + input.driveBuffer 
+  // 4. T_leave_home_raw = T_arrive_stop - (D_home_stop + B_drive)
+  const leaveHomeRaw = arriveStopTime.minus({ 
+    minutes: input.homeToStopDuration + input.driveBuffer 
   });
 
   // 5. T_leave_home = floor_to_interval(T_leave_home_raw, round_to)
@@ -40,11 +40,11 @@ export function calculateSchedule(input: PlanInput): ScheduleResult {
 
   return {
     leaveHome: leaveHomeTime.toFormat('h:mm a'),
-    arriveEx: arriveExTime.toFormat('h:mm a'),
-    leaveEx: leaveExTime.toFormat('h:mm a'),
+    arriveStop: arriveStopTime.toFormat('h:mm a'),
+    leaveStop: leaveStopTime.toFormat('h:mm a'),
     arriveEvent: mustArriveTime.toFormat('h:mm a'),
-    homeToExDuration: input.homeToExDuration,
-    exToEventDuration: input.exToEventDuration,
+    homeToStopDuration: input.homeToStopDuration,
+    stopToEventDuration: input.stopToEventDuration,
     driveBuffer: input.driveBuffer,
     pickupReady: input.pickupReady,
     arriveEarly: input.arriveEarly,
@@ -59,9 +59,9 @@ function floorToInterval(dateTime: DateTime, intervalMinutes: number): DateTime 
 
 export function formatScheduleText(schedule: ScheduleResult): string {
   return [
-    `Leave home by ${schedule.leaveHome} - ${schedule.homeToExDuration} min drive to ex's (+${schedule.driveBuffer})`,
-    `Arrive ex's at ${schedule.arriveEx} - ${schedule.pickupReady} mins to get ready`,
-    `Leave ex's by ${schedule.leaveEx} - ${schedule.exToEventDuration} min drive to event (+${schedule.driveBuffer})`,
+    `Leave home by ${schedule.leaveHome} - ${schedule.homeToStopDuration} min drive to stop (+${schedule.driveBuffer})`,
+    `Arrive stop at ${schedule.arriveStop} - ${schedule.pickupReady} mins to get ready`,
+    `Leave stop by ${schedule.leaveStop} - ${schedule.stopToEventDuration} min drive to event (+${schedule.driveBuffer})`,
     `Arrive event at ${schedule.arriveEvent} (arrive early ${schedule.arriveEarly} mins)`
   ].join('\n');
 }
